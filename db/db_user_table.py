@@ -6,7 +6,7 @@ from utils import generate_uuid
 db_user_table = sa.Table(
     "users",
     metadata,
-    sa.Column("id", sa.String(225), primary_key=True),
+    sa.Column("id", sa.Integer, primary_key=True),
     sa.Column("email", sa.String(255), nullable=False, unique=True),
     sa.Column("user_type", sa.Enum(UserType), nullable=False,server_default=UserType.USER.name),
     sa.Column("password", sa.String(255), nullable=False),

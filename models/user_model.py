@@ -8,7 +8,6 @@ class UserLogin(UserBase):
     password: str
 
 class UserRegister(UserBase):
-    id: Optional[str] = None
     password: str
 
 class UserOut(UserBase):
