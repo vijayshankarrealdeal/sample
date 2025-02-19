@@ -24,19 +24,24 @@ class Auth:
             logging.debug(f"Error in encoding token: {e}")
             raise HTTPException(status_code=400, detail="Unkonwn error")
 
+    @staticmethod
+    async def get_user(user_id):
+        try:
+            user_data = await dbs.fetch_one(
+                db_user_table.select().where(db_user_table.c.id == user_id)
+            )
+            return user_data
+        except HTTPException as e:
+            logging.debug(f"Error in registering user: {e}")
+            raise HTTPException(status_code=400, detail="Unkonwn error")
+
     async def register(self, user_data: UserRegister):
         user_data.password = bcrypt.hash(user_data.password)
         query = db_user_table.insert().values(**user_data.model_dump())
         async with dbs.transaction() as transaction:
-            try:
-                user_id = await transaction.execute(query)
-            except HTTPException as e:
-                transaction.rollback()
-                raise HTTPException(status_code=400, detail="Unkonwn error")
-        user_data = await dbs.fetch_one(
-            db_user_table.select().where(db_user_table.c.id == user_id)
-        )
-        return self.encode_token(user_data)
+            user_id = await transaction._connection.execute(query)
+            user_data = await self.get_user(user_id)
+            return self.encode_token(user_data)
 
     async def login(self, user_data: UserLogin):
 
