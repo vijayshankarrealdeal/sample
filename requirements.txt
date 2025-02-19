@@ -1,0 +1,6 @@
+alembic
+fastapi
+uvicorn
+sqlalchemy
+databases
+pydantic
