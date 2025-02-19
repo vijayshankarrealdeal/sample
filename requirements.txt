@@ -6,4 +6,5 @@ databases
 pydantic
 jwt
 bcrypt
+passlib
 asyncpg
