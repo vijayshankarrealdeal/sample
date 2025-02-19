@@ -8,3 +8,4 @@ PyJWT
 bcrypt
 passlib
 asyncpg
+pandas
