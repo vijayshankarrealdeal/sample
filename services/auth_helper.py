@@ -8,6 +8,8 @@ from db.db_user_table import db_user_table
 from models.user_model import UserLogin, UserRegister
 from op_logging import logging
 from passlib.hash import bcrypt
+
+
 class Auth:
     @staticmethod
     def encode_token(user_data):
@@ -25,10 +27,12 @@ class Auth:
     async def register(self, user_data: UserRegister):
         user_data.password = bcrypt.hash(user_data.password)
         query = db_user_table.insert().values(**user_data.model_dump())
-        try:
-            user_id = await dbs.execute(query)
-        except HTTPException as e:
-            raise HTTPException(status_code=400, detail="Unkonwn error")
+        with dbs.transaction() as transaction:
+            try:
+                user_id = await transaction.execute(query)
+            except HTTPException as e:
+                transaction.rollback()
+                raise HTTPException(status_code=400, detail="Unkonwn error")
         user_data = await dbs.fetch_one(
             db_user_table.select().where(db_user_table.c.id == user_id)
         )
