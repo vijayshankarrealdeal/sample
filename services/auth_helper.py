@@ -8,6 +8,7 @@ from database_connect import dbs
 from db.db_user_table import db_user_table
 from passlib.context import CryptContext
 from models.user_model import UserLogin, UserRegister
+from op_logging import logging
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -16,13 +17,14 @@ class Auth:
     @staticmethod
     def encode_token(user_data):
         payload = {
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=12),
-            "sub": user_data["id"],
+            "exp": datetime.datetime.now() + datetime.timedelta(days=12),
+            "sub": user_data.id,
         }
         try:
             token = jwt.encode(payload, "XYZ", algorithm="HS256")
             return {"token": token}
         except Exception as e:
+            logging.debug(f"Error in encoding token: {e}")
             raise HTTPException(status_code=400, detail="Unkonwn error")
 
     async def register(self, user_data: UserRegister):
