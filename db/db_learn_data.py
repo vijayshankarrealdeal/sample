@@ -8,6 +8,7 @@ article_db_table = sa.Table(
     sa.Column('title', sa.Text, nullable=False),
     sa.Column('introduction', sa.Text, nullable=False),
     sa.Column('conclusion', sa.Text, nullable=False),
+    sa.Column('sections_count', sa.Integer, nullable=True),
     sa.Column('created_at', sa.DateTime, server_default=sa.func.now()),
     sa.Column('updated_at', sa.DateTime, server_default=sa.func.now(), server_onupdate=sa.func.now()),
 )

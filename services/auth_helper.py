@@ -1,6 +1,7 @@
 from typing import Optional
 import jwt
 import datetime
+from fastapi import Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import HTTPException
 from database_connect import dbs
@@ -59,7 +60,7 @@ class Auth:
 
 
 class CustomHTTPBearer(HTTPBearer):
-    async def __call__(self, request) -> Optional[HTTPAuthorizationCredentials]:
+    async def __call__(self, request: Request) -> Optional[HTTPAuthorizationCredentials]:
         res = await super().__call__(request)
         try:
             payload = jwt.decode(res.credentials, "XYZ", algorithms=["HS256"])
