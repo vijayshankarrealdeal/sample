@@ -4,3 +4,5 @@ uvicorn
 sqlalchemy
 databases
 pydantic
+jwt
+passlib
