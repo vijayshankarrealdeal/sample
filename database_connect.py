@@ -8,7 +8,7 @@ POSTGRES_DB = os.environ.get("database", "mydatabase")
 POSTGRES_HOST = os.environ.get("hostname", "localhost")
 POSTGRES_PORT = os.environ.get("port", "5432")
 
-PRODUCTION_ENV = False
+PRODUCTION_ENV = True
 if PRODUCTION_ENV:
     DATABASE_URL = (
         f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}"
