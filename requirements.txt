@@ -5,5 +5,5 @@ sqlalchemy
 databases
 pydantic
 jwt
-passlib
+bcrypt
 asyncpg
