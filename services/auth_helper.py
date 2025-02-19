@@ -27,7 +27,7 @@ class Auth:
     async def register(self, user_data: UserRegister):
         user_data.password = bcrypt.hash(user_data.password)
         query = db_user_table.insert().values(**user_data.model_dump())
-        with dbs.transaction() as transaction:
+        async with dbs.transaction() as transaction:
             try:
                 user_id = await transaction.execute(query)
             except HTTPException as e:
