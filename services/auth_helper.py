@@ -9,11 +9,7 @@ from models.user_model import UserLogin, UserRegister
 from op_logging import logging
 from passlib.context import CryptContext
 
-pwd_context = CryptContext(
-        schemes=["pbkdf2_sha256"],
-        default="pbkdf2_sha256",
-        pbkdf2_sha256__default_rounds=30000
-)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class Auth:
     @staticmethod
@@ -41,7 +37,7 @@ class Auth:
             raise HTTPException(status_code=400, detail="Unkonwn error")
 
     async def register(self, user_data: UserRegister):
-        user_data.password = pwd_context.encrypt(user_data.password)
+        user_data.password = pwd_context.hash(user_data.password)
         query = db_user_table.insert().values(**user_data.model_dump())
         async with dbs.transaction() as transaction:
             user_id = await transaction._connection.execute(query)
@@ -57,7 +53,7 @@ class Auth:
         user_db_data = await dbs.fetch_one(
             db_user_table.select().where(db_user_table.c.id == user_id)
         )
-        if not pwd_context.verify(user_db_data.password, user_data.password):
+        if not pwd_context.verify(user_data.password,user_db_data.password):
             raise HTTPException(status_code=400, detail="Invalid email or password")
         return self.encode_token(user_db_data)
 
