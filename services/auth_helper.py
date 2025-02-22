@@ -17,7 +17,7 @@ class Auth:
     def encode_token(user_data):
         payload = {
             "exp": datetime.datetime.now() + datetime.timedelta(days=12),
-            "sub": user_data.id,
+            "sub": str(user_data['id']),
         }
         try:
             token = jwt.encode(payload, "XYZ", algorithm="HS256")
@@ -65,7 +65,7 @@ class CustomHTTPBearer(HTTPBearer):
         try:
             payload = jwt.decode(res.credentials, "XYZ", algorithms=["HS256"])
             user_data = await dbs.fetch_one(
-                db_user_table.select().where(db_user_table.c.id == payload["sub"])
+                db_user_table.select().where(db_user_table.c.id == int(payload["sub"]))
             )
             if not user_data:
                 raise HTTPException(401, "Invalid token")

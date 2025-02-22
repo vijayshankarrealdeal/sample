@@ -9,3 +9,4 @@ bcrypt
 passlib
 asyncpg
 pandas
+python-dotenv

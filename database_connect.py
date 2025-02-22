@@ -1,6 +1,8 @@
 import databases as dbs
 import sqlalchemy as sa
 import os
+from dotenv import load_dotenv  
+load_dotenv()
 
 POSTGRES_USER = os.environ.get("username", "postgres")
 POSTGRES_PASSWORD = os.environ.get("password", "secret")
@@ -15,7 +17,7 @@ if PRODUCTION_ENV:
         f"@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
     )
 else:
-    DATABASE_URL = "postgresql://curve_admin:nWr82461QEBFOTtu11bboYnEzgb99gjY@dpg-cuqs2a52ng1s73fa97bg-a.oregon-postgres.render.com/curves"
+    DATABASE_URL = os.environ.get("local_database_url",None)
 
 print("Connection URL:", DATABASE_URL)
 

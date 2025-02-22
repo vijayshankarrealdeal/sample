@@ -6,13 +6,13 @@ from engine.articles import get_articles, get_sections
 
 learn_router = APIRouter(tags=["learn"])
 
-@learn_router.get("/get_articles", response_model=List[Article])
+@learn_router.get("/get_articles", response_model=List[Article], dependencies=[Depends(oauth2_scheme)])
 async def get_db_article():
     data = await get_articles()
     return data
 
 
-@learn_router.get("/get_section", response_model=List[Section])
+@learn_router.get("/get_section", response_model=List[Section],dependencies=[Depends(oauth2_scheme)])
 async def get_article_sections(article_id: int):
     data = await get_sections(article_id)
     return data
